@@ -27,7 +27,7 @@ Plug 'junegunn/vim-easy-align'
 Plug 'https://github.com/junegunn/vim-github-dashboard.git'
 
 " Multiple Plug commands can be written in a single line using | separators
-Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+"Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 
 " On-demand loading
 " File navigation
@@ -65,7 +65,8 @@ Plug 'majutsushi/tagbar', { 'on': 'TagbarOpenAutoClose' }
 Plug 'w0rp/ale'
 
 " Auto Complete
-Plug 'Valloric/YouCompleteMe'
+"Plug 'Valloric/YouCompleteMe'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " Undo Tree
 Plug 'mbbill/undotree/'
@@ -112,6 +113,11 @@ Plug 'MarcWeber/vim-addon-mw-utils'
 Plug 'kana/vim-textobj-user'
 Plug 'fadein/vim-FIGlet'
 
+
+" checkhealth for vim
+if !has('nvim')
+    Plug 'rhysd/vim-healthcheck'
+endif
 call plug#end()
 
 
@@ -302,11 +308,67 @@ noremap <F5> :UndotreeToggle<CR>
 "set spell
 
 " You Complete ME
-nnoremap gd :YcmCompleter GoToDefinitionElseDeclaration<CR>
-nnoremap g/ :YcmCompleter GetDoc<CR>
-nnoremap gt :YcmCompleter GetType<CR>
-nnoremap gr :YcmCompleter GoToReferences<CR>
-let g:ycm_autoclose_preview_window_after_completion=0
-let g:ycm_autoclose_preview_window_after_insertion=1
-let g:ycm_use_clangd = 1
+"nnoremap gd :YcmCompleter GoToDefinitionElseDeclaration<CR>
+"nnoremap g/ :YcmCompleter GetDoc<CR>
+"nnoremap gt :YcmCompleter GetType<CR>
+"nnoremap gr :YcmCompleter GoToReferences<CR>
+"let g:ycm_autoclose_preview_window_after_completion=0
+"let g:ycm_autoclose_preview_window_after_insertion=1
+"let g:ycm_use_clangd = 1
 "let g:ycm_python_binary_path = g:ycm_python_interpreter_path
+
+
+" COC configurations
+let g:coc_global_extensions = ['coc-vimlsp', 
+      \'coc-clangd', 
+      \'coc-clang-format-style-options', 
+      \'coc-git', 
+      \'coc-css', 
+      \'coc-html', 
+      \'coc-htmlhint', 
+      \'coc-html-css-support', 
+      \'coc-json', 
+      \'coc-solargraph', 
+      \'coc-tsserver', 
+      \'coc-metals', 
+      \'coc-eslint', 
+      \'coc-python', 
+      \'coc-actions',
+      \'coc-marketplace']
+set updatetime=300
+set shortmess+=c
+" Use tab for trigger completion with characters ahead and navigate.
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+" Make <CR> auto-select the first completion item and notify coc.nvim to
+" format on enter, <cr> could be remapped by other vim plugin
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+" Use `[g` and `]g` to navigate diagnostics
+" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gt <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+" Formatting selected code.
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+" Applying codeAction to the selected region.
+" Example: `<leader>aap` for current paragraph
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+
