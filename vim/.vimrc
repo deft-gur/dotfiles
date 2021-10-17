@@ -2,7 +2,7 @@
 set nocompatible
 
 " Helps force plugins to load correctly when it is turned back on below
-filetype off
+filetype on
 
 " TODO: Load plugins here (pathogen or vundle)
 " auto install vim-plug
@@ -30,8 +30,10 @@ Plug 'https://github.com/junegunn/vim-github-dashboard.git'
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 
 " On-demand loading
+" File navigation
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
+Plug 'Xuyuanp/nerdtree-git-plugin'
 
 " Using a non-default branch
 Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
@@ -51,6 +53,65 @@ Plug '~/my-prototype-plugin'
 " add vim-plug support for colorscheme plugins
 Plug 'morhetz/gruvbox'
 " Initialize plugin system
+
+" add vim airline which gives you a status bar at bottom of vim
+Plug 'vim-airline/vim-airline'
+
+
+" Taglist
+Plug 'majutsushi/tagbar', { 'on': 'TagbarOpenAutoClose' }
+
+" Error checking
+Plug 'w0rp/ale'
+
+" Auto Complete
+Plug 'Valloric/YouCompleteMe'
+
+" Undo Tree
+Plug 'mbbill/undotree/'
+
+" Other visual enhancement
+Plug 'nathanaelkane/vim-indent-guides'
+Plug 'itchyny/vim-cursorword'
+
+" Git
+Plug 'rhysd/conflict-marker.vim'
+Plug 'tpope/vim-fugitive'
+Plug 'mhinz/vim-signify'
+Plug 'gisphm/vim-gitignore', { 'for': ['gitignore', 'vim-plug'] }
+
+" HTML, CSS, JavaScript, PHP, JSON, etc.
+Plug 'elzr/vim-json'
+Plug 'hail2u/vim-css3-syntax'
+Plug 'spf13/PIV', { 'for' :['php', 'vim-plug'] }
+Plug 'gko/vim-coloresque', { 'for': ['vim-plug', 'php', 'html', 'javascript', 'css', 'less'] }
+Plug 'pangloss/vim-javascript', { 'for' :['javascript', 'vim-plug'] }
+Plug 'mattn/emmet-vim'
+
+" Python
+Plug 'vim-scripts/indentpython.vim'
+
+" Markdown
+"Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install_sync() }, 'for' :['markdown', 'vim-plug'] }
+"Plug 'dhruvasagar/vim-table-mode', { 'on': 'TableModeToggle' }
+"Plug 'vimwiki/vimwiki'
+
+" Bookmarks
+Plug 'kshenoy/vim-signature'
+
+" Other useful utilities
+Plug 'terryma/vim-multiple-cursors'
+Plug 'junegunn/goyo.vim' " distraction free writing mode
+Plug 'tpope/vim-surround' " type ysks' to wrap the word with '' or type cs'` to change 'word' to `word`
+Plug 'godlygeek/tabular' " type ;Tabularize /= to align the =
+Plug 'gcmt/wildfire.vim' " in Visual mode, type i' to select all text in '', or type i) i] i} ip
+Plug 'scrooloose/nerdcommenter' " in <space>cc to comment a line
+
+" Dependencies
+Plug 'MarcWeber/vim-addon-mw-utils'
+Plug 'kana/vim-textobj-user'
+Plug 'fadein/vim-FIGlet'
+
 call plug#end()
 
 
@@ -60,14 +121,23 @@ syntax on
 " For plugins to load correctly
 filetype plugin indent on
 
+filetype indent on
+filetype plugin on
+
+" for vim conflict with terminal conflict 
+let &t_ut=''
+
 " TODO: Pick a leader key
-" let mapleader = ","
+let mapleader = " "
 
 " Security
 set modelines=0
 
 " Show line numbers
 set number
+
+" Show line cursor
+set cursorline
 
 " Show file stats
 set ruler
@@ -112,14 +182,20 @@ set laststatus=2
 set showmode
 set showcmd
 
+" Show list commands by typing tab under : 
+set wildmenu
+
 " Searching
 nnoremap / /\v
 vnoremap / /\v
 set hlsearch
+" disable same hlsearch after reload/reopen annother file
+exec "nohlsearch"
 set incsearch
 set ignorecase
 set smartcase
 set showmatch
+noremap <LEADER><CR> :nohlsearch<CR>
 map <leader><space> :let @/=''<cr> " clear search
 
 " Remap help key.
@@ -153,6 +229,74 @@ colorscheme gruvbox
 set colorcolumn=80
 highlight ColorColumn ctermbg=0 guibg=lightgrey
 
+" <CR> is enter, set 'R' to reload vim Configure 
+"map R :source $MYVIMRC<CR>
 
+" set Cap "J" and "K" to scroll 5 times faster
+noremap J 5j
+noremap K 5k
 
+" settings for spliting screens
+" remember ctrl+w <directio> moves curosr
+" use :edit <file path> to edit another file
+map sl :set splitright<CR>:vsplit<CR>
+map sh :set nosplitright<CR>:vsplit<CR>
+map sk :set nosplitbelow<CR>:split<CR>
+map sj :set splitbelow<CR>:split<CR>
+" map cursor focus keys
+map <LEADER>l <C-w>l
+map <LEADER>h <C-w>h
+map <LEADER>k <C-w>k
+map <LEADER>j <C-w>j
 
+" resize map for splitted windows
+map <up> :res +5<CR>
+map <down> :res -5<CR>
+map <right> :vertical resize+5<CR>
+map <left> :vertical resize-5<CR>
+
+" keys for making new tab in vim
+map tn :tabe<CR>
+map th :-tabnext<CR>
+map tl :+tabnext<CR>
+
+" show trailing spaces
+set list
+set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<
+",space:␣
+
+" tell vim to run command in current directory
+set autochdir
+
+" set cursor to the place where we last closed the file
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+
+" Config NERDTree
+map tt :NERDTreeToggle<CR>
+
+" NERDTree-git
+" ==
+" == NERDTree-git
+" ==
+let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "✹",
+    \ "Staged"    : "✚",
+    \ "Untracked" : "✭",
+    \ "Renamed"   : "➜",
+    \ "Unmerged"  : "═",
+    \ "Deleted"   : "✖",
+    \ "Dirty"     : "✗",
+    \ "Clean"     : "✔︎",
+    \ "Unknown"   : "?"
+    \ }
+" NERDTree couldn't execute system function in fish 
+" so we need to add the following line
+set shell=sh
+
+" Python-syntax
+let g:python_highlight_all = 1
+
+" Undotree
+noremap <F5> :UndotreeToggle<CR>
+
+"set spell
