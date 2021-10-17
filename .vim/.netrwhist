@@ -1,0 +1,12 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhistcnt =0
+let g:netrw_dirhist_0='/home/ziwen/github/my-setup/i3'
+let g:netrw_dirhist_9='/home/ziwen/github/my-setup/ranger'
+let g:netrw_dirhist_8='/home/ziwen/github/my-setup/fish'
+let g:netrw_dirhist_7='/home/ziwen/github/my-setup/.git'
+let g:netrw_dirhist_6='/home/ziwen/github/my-setup/.git/branches'
+let g:netrw_dirhist_5='/home/ziwen/github/my-setup/.git'
+let g:netrw_dirhist_4='/home/ziwen/github'
+let g:netrw_dirhist_3='/home/ziwen'
+let g:netrw_dirhist_2='/home'
+let g:netrw_dirhist_1='/'
