@@ -300,3 +300,13 @@ let g:python_highlight_all = 1
 noremap <F5> :UndotreeToggle<CR>
 
 "set spell
+
+" You Complete ME
+nnoremap gd :YcmCompleter GoToDefinitionElseDeclaration<CR>
+nnoremap g/ :YcmCompleter GetDoc<CR>
+nnoremap gt :YcmCompleter GetType<CR>
+nnoremap gr :YcmCompleter GoToReferences<CR>
+let g:ycm_autoclose_preview_window_after_completion=0
+let g:ycm_autoclose_preview_window_after_insertion=1
+let g:ycm_use_clangd = 1
+"let g:ycm_python_binary_path = g:ycm_python_interpreter_path
