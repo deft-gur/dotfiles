@@ -11,7 +11,8 @@
 
 # mod = Alt
 set $mod Mod1
-
+# mode = super
+#set $mod Mod4
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
 font pango:monospace 14
@@ -42,7 +43,9 @@ exec_always feh --bg-scale /home/ziwen/Pictures/wallpaper.jpg
 # use compton for terminal transparency
 exec --no-startup-id compton
 
-
+# use polyBar
+exec_always --no-startup-id $HOME/.config/polybar/launch.sh --cuts
+ 
 # Use pactl to adjust volume in PulseAudio.
 set $refresh_i3status killall -SIGUSR1 i3status
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
@@ -200,11 +203,11 @@ bindsym $mod+Control+a exec shutter -s
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
-bar {
-        status_command i3status
-        height 25
-        position top
-}
+#bar {
+#        status_command i3status
+#        height 25
+#        position top
+#}
 
 # documentation here: https://github.com/Airblader/i3
 # disable window tilebar
