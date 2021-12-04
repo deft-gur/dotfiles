@@ -1,0 +1,18 @@
+{
+  "coc.preferences.extensionUpdateCheck": "weekly",
+  "codeLens.enable": true,
+  "diagnostic.errorSign": "✘",
+  "diagnostic.warningSign": "",
+  "diagnostic.infoSign": "",
+  "diagnostic.virtualText": true,
+  "diagnostic.checkCurrentLine": true,
+  "metals.javaHome": "/usr/lib/jvm/java-8-openjdk-amd64",
+  "tsserver.formatOnType": true,
+  "coc.preferences.formatOnType": true,
+  "python.analysis.diagnosticEnabled": true,
+  "python.linting.enabled": true,
+  "python.linting.pylintEnabled": true,
+  "python.jediEnabled": false,
+  "languageserver": {
+  }
+}
