@@ -120,6 +120,9 @@ Plug 'fadein/vim-FIGlet'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'folke/trouble.nvim'
 
+" using pywal for vim
+Plug 'dylanaraps/wal.vim'
+
 
 " checkhealth for vim
 if !has('nvim')
@@ -150,7 +153,7 @@ set modelines=0
 set number
 
 " Show line cursor
-set cursorline
+"set cursorline
 
 " Show file stats
 set ruler
@@ -233,7 +236,8 @@ map <leader>l :set list!<CR> " Toggle tabs and EOL
 set background=dark
 "let g:solarized_termcolors=256
 "let g:solarized_termtrans=1
-colorscheme gruvbox 
+"colorscheme gruvbox 
+colorscheme wal
 " put https://raw.github.com/altercation/vim-colors-solarized/master/colors/solarized.vim
 " in ~/.vim/colors/ and uncomment:
 " colorscheme solarized
@@ -429,3 +433,6 @@ endfunction
 
 autocmd User CocGitStatusChange {command}
 
+"copy to clip board
+map <leader>y "+y 
+map <leader>p "+p
