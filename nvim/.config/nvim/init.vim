@@ -47,6 +47,13 @@ Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
 " Plugin outside ~/.vim/plugged with post-update hook
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+" fzf finder telescope
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
+Plug 'nvim-telescope/telescope.nvim'
+" Harpoon for file navigation
+Plug 'ThePrimeagen/harpoon'
+
 Plug 'airblade/vim-rooter'
 
 " Unmanaged plugin (manually installed and updated)
@@ -82,6 +89,7 @@ Plug 'rhysd/conflict-marker.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'mhinz/vim-signify'
 Plug 'gisphm/vim-gitignore', { 'for': ['gitignore', 'vim-plug'] }
+Plug 'zivyangll/git-blame.vim'
 
 " HTML, CSS, JavaScript, PHP, JSON, etc.
 "Plug 'elzr/vim-json'
@@ -95,20 +103,21 @@ Plug 'gisphm/vim-gitignore', { 'for': ['gitignore', 'vim-plug'] }
 "Plug 'vim-scripts/indentpython.vim'
 
 " Markdown
-"Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install_sync() }, 'for' :['markdown', 'vim-plug'] }
-"Plug 'dhruvasagar/vim-table-mode', { 'on': 'TableModeToggle' }
-"Plug 'vimwiki/vimwiki'
+"Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
+
+Plug 'dhruvasagar/vim-table-mode', { 'on': 'TableModeToggle' }
+Plug 'vimwiki/vimwiki'
 
 " Bookmarks
-Plug 'kshenoy/vim-signature'
+"Plug 'kshenoy/vim-signature'
 
 " Other useful utilities
-Plug 'terryma/vim-multiple-cursors'
-Plug 'junegunn/goyo.vim' " distraction free writing mode
-Plug 'tpope/vim-surround' " type ysks' to wrap the word with '' or type cs'` to change 'word' to `word`
-Plug 'godlygeek/tabular' " type ;Tabularize /= to align the =
-Plug 'gcmt/wildfire.vim' " in Visual mode, type i' to select all text in '', or type i) i] i} ip
-Plug 'scrooloose/nerdcommenter' " in <space>cc to comment a line
+"Plug 'terryma/vim-multiple-cursors'
+"Plug 'junegunn/goyo.vim' " distraction free writing mode
+"Plug 'tpope/vim-surround' " type ysks' to wrap the word with '' or type cs'` to change 'word' to `word`
+"Plug 'godlygeek/tabular' " type ;Tabularize /= to align the =
+"Plug 'gcmt/wildfire.vim' " in Visual mode, type i' to select all text in '', or type i) i] i} ip
+"Plug 'scrooloose/nerdcommenter' " in <space>cc to comment a line
 
 " Dependencies
 Plug 'MarcWeber/vim-addon-mw-utils'
@@ -123,7 +132,15 @@ Plug 'folke/trouble.nvim'
 " using pywal for vim
 Plug 'dylanaraps/wal.vim'
 
+" using latex
+Plug 'lervag/vimtex'
 
+" plugin for r like rstudio
+Plug 'jalvesaq/Nvim-R', {'branch': 'stable'}
+
+" plugin for NeoMake which makes file by exuecting ':Neomake' asynchronously
+Plug 'neomake/neomake'
+"
 " checkhealth for vim
 if !has('nvim')
     Plug 'rhysd/vim-healthcheck'
@@ -150,10 +167,10 @@ let mapleader = " "
 set modelines=0
 
 " Show line numbers
-set number
+set relativenumber
 
 " Show line cursor
-"set cursorline
+set cursorline
 
 " Show file stats
 set ruler
@@ -236,8 +253,8 @@ map <leader>l :set list!<CR> " Toggle tabs and EOL
 set background=dark
 "let g:solarized_termcolors=256
 "let g:solarized_termtrans=1
-"colorscheme gruvbox 
-colorscheme wal
+colorscheme gruvbox 
+"colorscheme wal
 " put https://raw.github.com/altercation/vim-colors-solarized/master/colors/solarized.vim
 " in ~/.vim/colors/ and uncomment:
 " colorscheme solarized
@@ -250,8 +267,8 @@ highlight ColorColumn ctermbg=0 guibg=lightgrey
 "map R :source $MYVIMRC<CR>
 
 " set Cap "J" and "K" to scroll 5 times faster
-noremap J 5j
-noremap K 5k
+"noremap J 5j
+"noremap K 5k
 
 " settings for spliting screens
 " remember ctrl+w <directio> moves curosr
@@ -316,7 +333,7 @@ set shell=sh
 " Undotree
 noremap <F5> :UndotreeToggle<CR>
 
-"set spell
+set spell
 
 " You Complete ME
 "nnoremap gd :YcmCompleter GoToDefinitionElseDeclaration<CR>
@@ -348,7 +365,9 @@ let g:coc_global_extensions = ['coc-vimlsp',
       \'coc-marketplace',
       \'coc-react-refactor',
       \'coc-diagnostic',
-      \'coc-prettier']
+      \'coc-vimtex',
+      \'coc-r-lsp',
+      \'coc-pyright']
 set updatetime=300
 set shortmess+=c
 " Use tab for trigger completion with characters ahead and navigate.
@@ -381,31 +400,31 @@ nmap <silent> gt <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 " Formatting selected code.
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
+"xmap <leader>f  <Plug>(coc-format-selected)
+"nmap <leader>f  <Plug>(coc-format-selected)
 " Applying codeAction to the selected region.
 " Example: `<leader>aap` for current paragraph
-xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
+"xmap <leader>a  <Plug>(coc-codeaction-selected)
+"nmap <leader>a  <Plug>(coc-codeaction-selected)
 
 " use :Prettier to format current buffer
-command! -nargs=0 Prettier :CocCommand prettier.formatFile
+"command! -nargs=0 Prettier :CocCommand prettier.formatFile
 
 " K to show documentation, and the following function enables hover to show
 "  documentation
 "nnoremap <silent> K :call CocAction('doHover')<CR>
-function! ShowDocIfNoDiagnostic(timer_id)
-  if (coc#float#has_float() == 0 && CocHasProvider('hover') == 1)
-    silent call CocActionAsync('doHover')
-  endif
-endfunction
+"function! ShowDocIfNoDiagnostic(timer_id)
+"  if (coc#float#has_float() == 0 && CocHasProvider('hover') == 1)
+"    silent call CocActionAsync('doHover')
+"  endif
+"endfunction
 
-function! s:show_hover_doc()
-  call timer_start(500, 'ShowDocIfNoDiagnostic')
-endfunction
+"function! s:show_hover_doc()
+"  call timer_start(500, 'ShowDocIfNoDiagnostic')
+"endfunction
 
-autocmd CursorHoldI * :call <SID>show_hover_doc()
-autocmd CursorHold * :call <SID>show_hover_doc()
+"autocmd CursorHoldI * :call <SID>show_hover_doc()
+"autocmd CursorHold * :call <SID>show_hover_doc()
 
 " coc-git settings
 " lightline
@@ -436,3 +455,16 @@ autocmd User CocGitStatusChange {command}
 "copy to clip board
 map <leader>y "+y 
 map <leader>p "+p
+
+"git blame settigns
+nnoremap <Leader>s :<C-u>call gitblame#echo()<CR>
+" for telescope
+cmap <C-R> <Plug>(TelescopeFuzzyCommandSearch)
+
+" Harpoon config
+nnoremap <leader>a :lua require("harpoon.mark").add_file()<CR>
+nnoremap <leader>, :lua require("harpoon.ui").toggle_quick_menu()<CR>
+nnoremap <leader>1 :lua require("harpoon.ui").nav_file(1)<CR>
+nnoremap <leader>2 :lua require("harpoon.ui").nav_file(2)<CR>
+nnoremap <leader>3 :lua require("harpoon.ui").nav_file(3)<CR>
+nnoremap <leader>4 :lua require("harpoon.ui").nav_file(4)<CR>
