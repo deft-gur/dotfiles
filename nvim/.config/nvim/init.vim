@@ -168,6 +168,7 @@ set modelines=0
 
 " Show line numbers
 set relativenumber
+set number
 
 " Show line cursor
 set cursorline
