@@ -31,12 +31,12 @@ Plug 'https://github.com/junegunn/vim-github-dashboard.git'
 
 " On-demand loading
 " File navigation
-Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
-Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
-Plug 'Xuyuanp/nerdtree-git-plugin'
+" Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+" Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
+" Plug 'Xuyuanp/nerdtree-git-plugin'
 
 " Using a non-default branch
-Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
+"Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
 
 " Using a tagged release; wildcard allowed (requires git 1.9.2 or above)
 Plug 'fatih/vim-go', { 'tag': '*' }
@@ -100,7 +100,7 @@ Plug 'zivyangll/git-blame.vim'
 "Plug 'mattn/emmet-vim'
 
 " Python
-"Plug 'vim-scripts/indentpython.vim'
+Plug 'vim-scripts/indentpython.vim'
 
 " Markdown
 "Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
@@ -112,17 +112,23 @@ Plug 'vimwiki/vimwiki'
 "Plug 'kshenoy/vim-signature'
 
 " Other useful utilities
-"Plug 'terryma/vim-multiple-cursors'
-"Plug 'junegunn/goyo.vim' " distraction free writing mode
-"Plug 'tpope/vim-surround' " type ysks' to wrap the word with '' or type cs'` to change 'word' to `word`
 "Plug 'godlygeek/tabular' " type ;Tabularize /= to align the =
-"Plug 'gcmt/wildfire.vim' " in Visual mode, type i' to select all text in '', or type i) i] i} ip
+"Plug 'junegunn/goyo.vim' " distraction free writing mode
 "Plug 'scrooloose/nerdcommenter' " in <space>cc to comment a line
+Plug 'gcmt/wildfire.vim' " in Visual mode, type i' to select all text in '', or type i) i] i} ip
+Plug 'jiangmiao/auto-pairs'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-surround' " type ysks' to wrap the word with '' or type cs'` to change 'word' to `word`
 
 " Dependencies
 Plug 'MarcWeber/vim-addon-mw-utils'
 Plug 'kana/vim-textobj-user'
 Plug 'fadein/vim-FIGlet'
+
+" Tmux 
+Plug 'christoomey/vim-tmux-navigator'
 
 " Trouble for vim https://github.com/folke/trouble.nvim
 " this is only for nvim
@@ -140,7 +146,13 @@ Plug 'jalvesaq/Nvim-R', {'branch': 'stable'}
 
 " plugin for NeoMake which makes file by exuecting ':Neomake' asynchronously
 Plug 'neomake/neomake'
-"
+
+" Ctags and CScopes
+Plug 'brookhong/cscope.vim'
+Plug 'ludovicchabant/vim-gutentags'
+" This works nicely with gutentags for cscope (maybe cscop.vim is not needed)
+Plug 'skywind3000/gutentags_plus'
+
 " checkhealth for vim
 if !has('nvim')
     Plug 'rhysd/vim-healthcheck'
@@ -247,7 +259,7 @@ set listchars=tab:▸\ ,eol:¬
 " Uncomment this to enable by default:
 " set list " To enable by default
 " Or use your leader key + l to toggle on/off
-map <leader>l :set list!<CR> " Toggle tabs and EOL
+"map <leader>l :set list!<CR> " Toggle tabs and EOL
 
 " Color scheme (terminal)
 "set t_Co=256
@@ -297,11 +309,11 @@ map tl :+tabnext<CR>
 
 " show trailing spaces
 set list
-set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<
+"set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<
 ",space:␣
 
 " tell vim to run command in current directory
-set autochdir
+"set autochdir
 
 " set cursor to the place where we last closed the file
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
@@ -313,23 +325,23 @@ map tt :NERDTreeToggle<CR>
 " ==
 " == NERDTree-git
 " ==
-let g:NERDTreeIndicatorMapCustom = {
-    \ "Modified"  : "✹",
-    \ "Staged"    : "✚",
-    \ "Untracked" : "✭",
-    \ "Renamed"   : "➜",
-    \ "Unmerged"  : "═",
-    \ "Deleted"   : "✖",
-    \ "Dirty"     : "✗",
-    \ "Clean"     : "✔︎",
-    \ "Unknown"   : "?"
-    \ }
+" let g:NERDTreeIndicatorMapCustom = {
+"     \ "Modified"  : "✹",
+"     \ "Staged"    : "✚",
+"     \ "Untracked" : "✭",
+"     \ "Renamed"   : "➜",
+"     \ "Unmerged"  : "═",
+"     \ "Deleted"   : "✖",
+"     \ "Dirty"     : "✗",
+"     \ "Clean"     : "✔︎",
+"     \ "Unknown"   : "?"
+"     \ }
 " NERDTree couldn't execute system function in fish 
 " so we need to add the following line
-set shell=sh
+" set shell=sh
 
 " Python-syntax
-"let g:python_highlight_all = 1
+let g:python_highlight_all = 1
 
 " Undotree
 noremap <F5> :UndotreeToggle<CR>
@@ -348,42 +360,40 @@ set spell
 
 
 " COC configurations
-let g:coc_global_extensions = ['coc-vimlsp', 
-      \'coc-clangd', 
+let g:coc_global_extensions = [
       \'coc-clang-format-style-options', 
-      \'coc-git', 
+      \'coc-clangd', 
       \'coc-css', 
-      \'coc-html', 
-      \'coc-htmlhint', 
-      \'coc-html-css-support', 
-      \'coc-json', 
-      \'coc-solargraph', 
-      \'coc-tsserver', 
-      \'coc-metals', 
-      \'coc-eslint', 
-      \'coc-python', 
-      \'coc-actions',
-      \'coc-marketplace',
-      \'coc-react-refactor',
       \'coc-diagnostic',
-      \'coc-vimtex',
+      \'coc-eslint', 
+      \'coc-git', 
+      \'coc-html', 
+      \'coc-html-css-support', 
+      \'coc-htmlhint', 
+      \'coc-json', 
+      \'coc-pyright',
       \'coc-r-lsp',
-      \'coc-pyright']
+      \'coc-sh',
+      \'coc-tsserver', 
+      \'coc-vimlsp', 
+      \'coc-vimtex',
+      \]
+
 set updatetime=300
 set shortmess+=c
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
+" inoremap <silent><expr> <TAB>
+"       \ pumvisible() ? "\<C-n>" :
+"       \ <SID>check_back_space() ? "\<TAB>" :
+"       \ coc#refresh()
+" inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+"
+"function! s:check_back_space() abort
+"  let col = col('.') - 1
+"  return !col || getline('.')[col - 1]  =~# '\s'
+"endfunction
 " Make <CR> auto-select the first completion item and notify coc.nvim to
 " format on enter, <cr> could be remapped by other vim plugin
 "inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
@@ -461,6 +471,11 @@ map <leader>p "+p
 nnoremap <Leader>s :<C-u>call gitblame#echo()<CR>
 " for telescope
 cmap <C-R> <Plug>(TelescopeFuzzyCommandSearch)
+" Find files using Telescope command-line sugar.
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 
 " Harpoon config
 nnoremap <leader>a :lua require("harpoon.mark").add_file()<CR>
@@ -469,3 +484,106 @@ nnoremap <leader>1 :lua require("harpoon.ui").nav_file(1)<CR>
 nnoremap <leader>2 :lua require("harpoon.ui").nav_file(2)<CR>
 nnoremap <leader>3 :lua require("harpoon.ui").nav_file(3)<CR>
 nnoremap <leader>4 :lua require("harpoon.ui").nav_file(4)<CR>
+
+map _v :e $MYVIMRC<CR>
+map _x :source $MYVIMRC<CR>
+
+nnoremap <leader>l :call ToggleLocationList()<CR>
+
+" CScope settings
+nnoremap <leader>fa :call CscopeFindInteractive(expand('<cword>'))<CR>
+"" s: Find this C symbol
+"nnoremap  <leader>fs :call CscopeFind('s', expand('<cword>'))<CR>
+"" g: Find this definition
+"nnoremap  <leader>fg :call CscopeFind('g', expand('<cword>'))<CR>
+"" d: Find functions called by this function
+"nnoremap  <leader>fd :call CscopeFind('d', expand('<cword>'))<CR>
+"" c: Find functions calling this function
+"nnoremap  <leader>fc :call CscopeFind('c', expand('<cword>'))<CR>
+"" t: Find this text string
+"nnoremap  <leader>ft :call CscopeFind('t', expand('<cword>'))<CR>
+"" e: Find this egrep pattern
+"nnoremap  <leader>fe :call CscopeFind('e', expand('<cword>'))<CR>
+"" f: Find this file
+"nnoremap  <leader>ff :call CscopeFind('f', expand('<cword>'))<CR>
+"" i: Find files #including this file
+"nnoremap  <leader>fi :call CscopeFind('i', expand('<cword>'))<CR>
+"
+let g:cscope_silent = 1
+
+" This is to disable coc on certain type files in particular I was having
+" trouble to read assembly code .S files
+function! s:disable_coc_for_type()
+        let l:filesuffix_blacklist = ['S']
+	if index(l:filesuffix_blacklist, expand('%:e')) != -1
+		let b:coc_enabled = 0
+	endif
+endfunction
+autocmd BufRead,BufNewFile * call s:disable_coc_for_type()
+
+" For alphabet subscripts:
+"alphsubs ---------------------- {{{
+execute "digraphs as " . 0x2090
+execute "digraphs es " . 0x2091
+execute "digraphs hs " . 0x2095
+execute "digraphs is " . 0x1D62
+execute "digraphs js " . 0x2C7C
+execute "digraphs ks " . 0x2096
+execute "digraphs ls " . 0x2097
+execute "digraphs ms " . 0x2098
+execute "digraphs ns " . 0x2099
+execute "digraphs os " . 0x2092
+execute "digraphs ps " . 0x209A
+execute "digraphs rs " . 0x1D63
+execute "digraphs ss " . 0x209B
+execute "digraphs ts " . 0x209C
+execute "digraphs us " . 0x1D64
+execute "digraphs vs " . 0x1D65
+execute "digraphs xs " . 0x2093
+
+execute "digraphs aS " . 0x1d43
+execute "digraphs bS " . 0x1d47
+execute "digraphs cS " . 0x1d9c
+execute "digraphs dS " . 0x1d48
+execute "digraphs eS " . 0x1d49
+execute "digraphs fS " . 0x1da0
+execute "digraphs gS " . 0x1d4d
+execute "digraphs hS " . 0x02b0
+execute "digraphs iS " . 0x2071
+execute "digraphs jS " . 0x02b2
+execute "digraphs kS " . 0x1d4f
+execute "digraphs lS " . 0x02e1
+execute "digraphs mS " . 0x1d50
+execute "digraphs nS " . 0x207f
+execute "digraphs oS " . 0x1d52
+execute "digraphs pS " . 0x1d56
+execute "digraphs rS " . 0x02b3
+execute "digraphs sS " . 0x02e2
+execute "digraphs tS " . 0x1d57
+execute "digraphs uS " . 0x1d58
+execute "digraphs vS " . 0x1d5b
+execute "digraphs wS " . 0x02b7
+execute "digraphs xS " . 0x02e3
+execute "digraphs yS " . 0x02b8
+execute "digraphs zS " . 0x1dbb
+
+execute "digraphs AS " . 0x1D2C
+execute "digraphs BS " . 0x1D2E
+execute "digraphs DS " . 0x1D30
+execute "digraphs ES " . 0x1D31
+execute "digraphs GS " . 0x1D33
+execute "digraphs HS " . 0x1D34
+execute "digraphs IS " . 0x1D35
+execute "digraphs JS " . 0x1D36
+execute "digraphs KS " . 0x1D37
+execute "digraphs LS " . 0x1D38
+execute "digraphs MS " . 0x1D39
+execute "digraphs NS " . 0x1D3A
+execute "digraphs OS " . 0x1D3C
+execute "digraphs PS " . 0x1D3E
+execute "digraphs RS " . 0x1D3F
+execute "digraphs TS " . 0x1D40
+execute "digraphs US " . 0x1D41
+execute "digraphs VS " . 0x2C7D
+execute "digraphs WS " . 0x1D42
+"}}}
