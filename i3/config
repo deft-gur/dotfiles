@@ -20,8 +20,13 @@ set $mod Mod1
 #font pango:monospace 14
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
-font pango:DejaVu Sans Mono 14
+font pango:DejaVu Sans Mono 18
 
+# fix monitor issue with nvidia-config
+exec --no-startup-id xrandr --auto
+# Never go to sleep after idle
+exec --no-startup-id xset s off
+exec --no-startup-id xset -dpms 
 # Start XDG autostart .desktop files using dex. See also
 # https://wiki.archlinux.org/index.php/XDG_Autostart
 exec --no-startup-id dex --autostart --environment i3
@@ -41,7 +46,7 @@ exec --no-startup-id nm-applet
 # auto start redshift
 #exec --no-startup-id redshift -O 2500
 # auto start imwheel
-exec --no-startup-id imwheel
+#exec --no-startup-id imwheel
 # auto start albert in background
 #exec albert &
 # set wall paper, exec_always whenever the wallpaper.jpg is changed we
@@ -52,16 +57,16 @@ exec_always feh --bg-scale $HOME/Pictures/wal/wallpaper.jpg
 #exec --no-startup-id compton
 
 # use picom instead of compton for transparency of all window
-exec --no-startup-id picom -I 1 -O 1 
+#exec --no-startup-id picom -I 1 -O 1
 
 # use polyBar
 #exec_always --no-startup-id $HOME/.config/polybar/launch.sh --cuts
 
 # use dual monitor for arch
-exec_always --no-startup-id $HOME/.config/i3/dualMonitor.sh
+#exec_always --no-startup-id $HOME/.config/i3/dualMonitor.sh
 
 # use fcitx for typing chinese
-exec_always fcitx
+exec_always fcitx5 -d
 
 
 # Use pactl to adjust volume in PulseAudio.
@@ -112,7 +117,7 @@ bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
 # split in horizontal orientation
-#bindsym $mod+g split h
+bindsym $mod+n split h
 
 # split in vertical orientation
 bindsym $mod+v split v
@@ -181,6 +186,7 @@ assign [class="Slack"] $ws10
 # doesnt' work with wine for some reason or wechat.exe
 #assign [class="wine"] $ws9
 assign [class="Shutter"] $ws8
+assign [class="shutter"] $ws8
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -243,3 +249,6 @@ gaps outer -8
 #https://www.reddit.com/r/i3wm/comments/mkjjaj/very_useful_i3_config_open_floating_window/
 for_window [class=Alacritty instance="__text_scratchpad"] floating enable
 bindsym $mod+g exec ~/.config/i3/text-scratchpad.sh
+
+bindsym $mod+i exec rld-keynav
+
