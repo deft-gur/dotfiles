@@ -121,6 +121,9 @@ Plug 'terryma/vim-multiple-cursors'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround' " type ysks' to wrap the word with '' or type cs'` to change 'word' to `word`
+Plug 'pseewald/vim-anyfold'
+Plug 'ggandor/leap.nvim'
+Plug 'cbochs/portal.nvim'
 
 " Dependencies
 Plug 'MarcWeber/vim-addon-mw-utils'
@@ -132,8 +135,8 @@ Plug 'christoomey/vim-tmux-navigator'
 
 " Trouble for vim https://github.com/folke/trouble.nvim
 " this is only for nvim
-Plug 'kyazdani42/nvim-web-devicons'
-Plug 'folke/trouble.nvim'
+"Plug 'kyazdani42/nvim-web-devicons'
+"Plug 'folke/trouble.nvim'
 
 " using pywal for vim
 Plug 'dylanaraps/wal.vim'
@@ -145,7 +148,7 @@ Plug 'lervag/vimtex'
 Plug 'jalvesaq/Nvim-R', {'branch': 'stable'}
 
 " plugin for NeoMake which makes file by exuecting ':Neomake' asynchronously
-Plug 'neomake/neomake'
+"Plug 'neomake/neomake'
 
 " Ctags and CScopes
 Plug 'brookhong/cscope.vim'
@@ -283,18 +286,19 @@ highlight ColorColumn ctermbg=0 guibg=lightgrey
 "noremap J 5j
 "noremap K 5k
 
+" NOTE: conflict with leap
 " settings for spliting screens
 " remember ctrl+w <directio> moves curosr
 " use :edit <file path> to edit another file
-map sl :set splitright<CR>:vsplit<CR>
-map sh :set nosplitright<CR>:vsplit<CR>
-map sk :set nosplitbelow<CR>:split<CR>
-map sj :set splitbelow<CR>:split<CR>
+"map sl :set splitright<CR>:vsplit<CR>
+"map sh :set nosplitright<CR>:vsplit<CR>
+"map sk :set nosplitbelow<CR>:split<CR>
+"map sj :set splitbelow<CR>:split<CR>
 " map cursor focus keys
-map <LEADER>l <C-w>l
-map <LEADER>h <C-w>h
-map <LEADER>k <C-w>k
-map <LEADER>j <C-w>j
+"map <LEADER>l <C-w>l
+"map <LEADER>h <C-w>h
+"map <LEADER>k <C-w>k
+"map <LEADER>j <C-w>j
 
 " resize map for splitted windows
 map <up> :res +5<CR>
@@ -304,8 +308,8 @@ map <left> :vertical resize-5<CR>
 
 " keys for making new tab in vim
 map tn :tabe<CR>
-map th :-tabnext<CR>
-map tl :+tabnext<CR>
+map th :tabp<CR>
+map tl :tabnext<CR>
 
 " show trailing spaces
 set list
@@ -319,7 +323,7 @@ set list
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
 " Config NERDTree
-map tt :NERDTreeToggle<CR>
+"map tt :NERDTreeToggle<CR>
 
 " NERDTree-git
 " ==
@@ -400,10 +404,10 @@ set shortmess+=c
 "                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 " Use `[g` and `]g` to navigate diagnostics
 " Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
+"nmap <silent> [g <Plug>(coc-diagnostic-prev)
+"nmap <silent> ]g <Plug>(coc-diagnostic-next)
 " show all diagnostic
-nnoremap <silent><nowait> <LEADER>L  :<C-u>CocList diagnostics<cr>
+"nnoremap <silent><nowait> <LEADER>L  :<C-u>CocList diagnostics<cr>
 
 " GoTo code navigation.
 nmap <silent> gd <Plug>(coc-definition)
@@ -587,3 +591,30 @@ execute "digraphs US " . 0x1D41
 execute "digraphs VS " . 0x2C7D
 execute "digraphs WS " . 0x1D42
 "}}}
+
+"" Anyfold configuration:
+"autocmd Filetype * AnyFoldActivate
+"
+"set foldlevel=0
+"
+"autocmd Filetype cpp set foldignore=#/
+"let g:anyfold_identify_comments=2
+"
+"" activate anyfold by default
+"augroup anyfold
+"    autocmd!
+"    autocmd Filetype <filetype> AnyFoldActivate
+"augroup END
+"
+"" disable anyfold for large files
+"let g:LargeFile = 1000000 " file is large if size greater than 1MB
+"autocmd BufReadPre,BufRead * let f=getfsize(expand("<afile>")) | if f > g:LargeFile || f == -2 | call LargeFile() | endif
+"function LargeFile()
+"    augroup anyfold
+"        autocmd! " remove AnyFoldActivate
+"        autocmd Filetype <filetype> setlocal foldmethod=indent " fall back to indent folding
+"    augroup END
+"endfunction
+
+" souree init.lua file
+lua require('init')
