@@ -135,8 +135,8 @@ Plug 'christoomey/vim-tmux-navigator'
 
 " Trouble for vim https://github.com/folke/trouble.nvim
 " this is only for nvim
-"Plug 'kyazdani42/nvim-web-devicons'
-"Plug 'folke/trouble.nvim'
+Plug 'kyazdani42/nvim-web-devicons'
+Plug 'folke/trouble.nvim'
 
 " using pywal for vim
 Plug 'dylanaraps/wal.vim'
@@ -151,9 +151,12 @@ Plug 'jalvesaq/Nvim-R', {'branch': 'stable'}
 "Plug 'neomake/neomake'
 
 " Ctags and CScopes
-Plug 'brookhong/cscope.vim'
+" The following plugin will not be working for nvim 0.9+ since nvim removed the
+" support for cscope options.
+"Plug 'brookhong/cscope.vim'
+Plug 'dhananjaylatkar/cscope_maps.nvim'
 Plug 'ludovicchabant/vim-gutentags'
-" This works nicely with gutentags for cscope (maybe cscop.vim is not needed)
+" This works nicely with gutentags for cscope (maybe cscope.vim is not needed)
 Plug 'skywind3000/gutentags_plus'
 
 " checkhealth for vim
@@ -494,8 +497,9 @@ map _x :source $MYVIMRC<CR>
 
 nnoremap <leader>l :call ToggleLocationList()<CR>
 
+" These Cscope options will not work for nvim 0.9+
 " CScope settings
-nnoremap <leader>fa :call CscopeFindInteractive(expand('<cword>'))<CR>
+"nnoremap <leader>fa :call CscopeFindInteractive(expand('<cword>'))<CR>
 "" s: Find this C symbol
 "nnoremap  <leader>fs :call CscopeFind('s', expand('<cword>'))<CR>
 "" g: Find this definition
@@ -513,15 +517,18 @@ nnoremap <leader>fa :call CscopeFindInteractive(expand('<cword>'))<CR>
 "" i: Find files #including this file
 "nnoremap  <leader>fi :call CscopeFind('i', expand('<cword>'))<CR>
 "
-let g:cscope_silent = 1
+
+"let g:cscope_silent = 1
+"setup cscope_maps for nvim 0.9+
+lua require("cscope_maps").setup({})
 
 " This is to disable coc on certain type files in particular I was having
 " trouble to read assembly code .S files
 function! s:disable_coc_for_type()
         let l:filesuffix_blacklist = ['S']
-	if index(l:filesuffix_blacklist, expand('%:e')) != -1
-		let b:coc_enabled = 0
-	endif
+  if index(l:filesuffix_blacklist, expand('%:e')) != -1
+    let b:coc_enabled = 0
+  endif
 endfunction
 autocmd BufRead,BufNewFile * call s:disable_coc_for_type()
 

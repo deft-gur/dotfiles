@@ -19,6 +19,10 @@
           "directory": "/tmp/ccls"
         }
       }
+    },
+    "nix": {
+      "command": "nixd",
+      "filetypes": ["nix"]
     }
   }
 }
