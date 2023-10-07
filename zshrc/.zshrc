@@ -143,3 +143,5 @@ fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 
 eval $(thefuck --alias)
 
+# Hook direnv
+eval "$(direnv hook zsh)"
