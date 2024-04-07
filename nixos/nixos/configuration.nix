@@ -6,7 +6,7 @@
 
 let
   compiledLayout = pkgs.runCommand "keyboard-layout" {} ''
-    ${pkgs.xorg.xkbcomp}/bin/xkbcomp ${/home/ziwen/layout.xkb} $out
+    ${pkgs.xorg.xkbcomp}/bin/xkbcomp ${../../xkbcomp/layout.xkb} $out
   '';
 in {
   nix.settings.trusted-users = [ "root" "ziwen" ];
@@ -190,6 +190,8 @@ in {
     qutebrowser
     readline
     ripgrep
+    rofi
+    rofimoji
     rstudio
     shutter
     stow
@@ -268,4 +270,6 @@ in {
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "22.11"; # Did you read the comment?
 
+  # Enable flake.
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 }
