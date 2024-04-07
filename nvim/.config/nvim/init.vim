@@ -628,3 +628,6 @@ execute "digraphs WS " . 0x1D42
 
 " source init.lua file
 lua require('init')
+
+" Set vimtex to use zathura
+let g:vimtex_view_method = 'zathura'
