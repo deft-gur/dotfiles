@@ -116,19 +116,22 @@ fi
 # Import colorscheme from 'wal'
 #cat /home/ziwen/.cache/wal/sequences
 
-# for note taking
+# For note taking
 export NOTE_DIR=~/notes/
 alias note='. note'
 
-# adding a local binary dir to our path 
+# Adding a local binary dir to our path
 export PATH=~/bin:$PATH
 export PATH=~/.local/bin/:$PATH
 
-# for cs350
-export PATH=$HOME/sys161/bin:$HOME/sys161/tools/bin:$PATH
+# For maple
+export PATH=$HOME/maple/bin/:$PATH
+
+# For cs350
+#export PATH=$HOME/sys161/bin:$HOME/sys161/tools/bin:$PATH
 # For cs360 minisat
-export PATH=$HOME/bin/ministat/bin:$PATH
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/bin/ministat/lib
+#export PATH=$HOME/bin/ministat/bin:$PATH
+#export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/bin/ministat/lib
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
@@ -145,3 +148,6 @@ eval $(thefuck --alias)
 
 # Hook direnv
 eval "$(direnv hook zsh)"
+
+# For cs451
+alias nvimJ='nvim -u /home/ziwen/school/2024-winter/cs451/init.vim'
