@@ -147,7 +147,7 @@ Plug 'lervag/vimtex'
 " plugin for r like rstudio
 Plug 'jalvesaq/Nvim-R', {'branch': 'stable'}
 
-" plugin for NeoMake which makes file by exuecting ':Neomake' asynchronously
+" Plugin for NeoMake which makes file by exuecting ':Neomake' asynchronously
 "Plug 'neomake/neomake'
 
 " Ctags and CScopes
@@ -158,6 +158,9 @@ Plug 'dhananjaylatkar/cscope_maps.nvim'
 Plug 'ludovicchabant/vim-gutentags'
 " This works nicely with gutentags for cscope (maybe cscope.vim is not needed)
 Plug 'skywind3000/gutentags_plus'
+
+" For Sage Math.
+Plug 'petRuShka/vim-sage'
 
 " checkhealth for vim
 if !has('nvim')
@@ -623,5 +626,5 @@ execute "digraphs WS " . 0x1D42
 "    augroup END
 "endfunction
 
-" souree init.lua file
+" source init.lua file
 lua require('init')

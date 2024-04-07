@@ -4,7 +4,6 @@
   "diagnostic.warningSign": "",
   "diagnostic.infoSign": "",
   "diagnostic.checkCurrentLine": true,
-  "metals.javaHome": "/usr/lib/jvm/java-8-openjdk-amd64",
   "python.analysis.diagnosticEnabled": true,
   "python.linting.enabled": true,
   "python.linting.pylintEnabled": true,
@@ -24,5 +23,6 @@
       "command": "nixd",
       "filetypes": ["nix"]
     }
-  }
+  },
+  "java.home": "/run/current-system/sw/bin/java"
 }
