@@ -6,7 +6,7 @@
 
 let
   compiledLayout = pkgs.runCommand "keyboard-layout" {} ''
-    ${pkgs.xorg.xkbcomp}/bin/xkbcomp ${../../xkbcomp/layout.xkb} $out
+    ${pkgs.xorg.xkbcomp}/bin/xkbcomp ${../xkbcomp/layout.xkb} $out
   '';
 in {
   nix.settings.trusted-users = [ "root" "ziwen" ];
