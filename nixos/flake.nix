@@ -10,15 +10,17 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
   };
 
-  outputs = { self, nixpkgs, home-manager, nixos-hardware, ... }:
+  outputs = { self, nixpkgs, home-manager, nixos-hardware, ... }@attrs:
     let
       lib = nixpkgs.lib;
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
+      username = "ziwen";
     in {
       nixosConfigurations = {
         nixos = lib.nixosSystem {
           inherit system;
+          specialArgs = { inherit username; };
           modules = [
             ./configuration.nix
             nixos-hardware.nixosModules.msi-gs60

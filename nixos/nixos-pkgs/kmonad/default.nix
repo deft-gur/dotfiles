@@ -4,6 +4,10 @@ let
   kmonad = (import ../../pkgs/kmonad/derivation.nix) pkgs;
 in
 {
+  environment.systemPackages = with pkgs; [
+    kmonad
+  ];
+
   users.groups = { uinput = {}; };
 
   services.udev.extraRules =
@@ -12,11 +16,11 @@ in
       KERNEL=="uinput", MODE="0660", GROUP="uinput", OPTIONS+="static_node=uinput"
     '';
 
-  services.kmonad = {
-    enable = true;
-    configfiles = [ ../../pkgs/kmonad/config/laptop.kbd ];
-    package = kmonad;
-  };
+  #services.kmonad = {
+  #  enable = true;
+  #  configfiles = [ ../../pkgs/kmonad/config/laptop.kbd ];
+  #  package = kmonad;
+  #};
 
   services.xserver = {
     xkbOptions = "compose:ralt";
@@ -26,4 +30,8 @@ in
   users.extraUsers.${username} = {
     extraGroups = [ "input" "uinput" ];
   };
+  users.extraUsers.ziwen = {
+    extraGroups = [ "input" "uinput" ];
+  };
+
 }

@@ -2,18 +2,19 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, username, ... }:
 
 let
   compiledLayout = pkgs.runCommand "keyboard-layout" {} ''
     ${pkgs.xorg.xkbcomp}/bin/xkbcomp ${../xkbcomp/layout.xkb} $out
   '';
 in {
-  nix.settings.trusted-users = [ "root" "ziwen" ];
+  nix.settings.trusted-users = [ "root" "${username}" ];
 
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ./nixos-pkgs/kmonad/default.nix
     ];
 
   # Bootloader.
@@ -168,14 +169,14 @@ in {
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.ziwen = {
+  users.users.${username} = {
     isNormalUser = true;
     description = "Ziwen Wang";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [];
   };
 
-  # Allow unfree packages
+  # Allow unfree packages.
   nixpkgs.config.allowUnfree = true;
 
   # Allow podman for toolbox
@@ -188,20 +189,21 @@ in {
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    #chezmoi
     #libgccjit
+    #lshw
     R
+    abiword
     alacritty
     autoconf
-    abiword
     automake
     bashmount
     breeze-icons
     brightnessctl
-    #chezmoi
     ccls
+    chromium
     clang
     clang-tools
-    chromium
     cscope
     ctags
     direnv
@@ -212,19 +214,18 @@ in {
     firefox
     gfortran
     git
+    gnome.nautilus
     gnumake
     hunspell
     imagemagick
     jdk8
     kitty
+    libreoffice-qt
     libxml2
     libxml2.dev
     libxslt
-    libreoffice-qt
-    #lshw
-    gnome.nautilus
-    nodejs
     neovim
+    nodejs
     oxygenfonts
     pandoc
     python3
@@ -237,10 +238,10 @@ in {
     rstudio
     shutter
     stow
-    unzip
     texlive.combined.scheme-full
     tmux
     toolbox
+    unzip
     wget
     xclip
     xf86_input_wacom
