@@ -10,7 +10,7 @@ let
   '';
 in {
   nix.settings.trusted-users = [ "root" "ziwen" ];
-  
+
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
@@ -43,6 +43,14 @@ in {
     fcitx5.addons = with pkgs; [ fcitx5-rime fcitx5-chinese-addons ];
   };
 
+  # Change behaviour of Lid close.
+  # For MSI GS65 after suspending it will go into air plane mode which blocks
+  # the wireless wlan at hardware level.
+  # So either we don't goto suspend mode or we disable airplane mode. But
+  # airplane mode doesn't have any actions (There is a post that fixes this but
+  # it requires to change grub configuration file).
+  services.logind.lidSwitch = "ignore";
+
   # Enable bluetooth
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
@@ -58,13 +66,13 @@ in {
     layout = "us";
     xkbVariant = "";
     autorun = false;
-    
+
     enable = true;
-    
+
     desktopManager = {
       xterm.enable = false;
     };
-   
+
     windowManager.i3 = {
       enable = true;
       package = pkgs.i3-gaps;
@@ -99,7 +107,7 @@ in {
 
   };
 
-  
+
 
   # Make sure opengl is enabled
   hardware.opengl = {
@@ -112,26 +120,51 @@ in {
   # enable touchpad
   services.xserver.libinput.enable = true;
 
-  # TODO: Right now if we specify both "nvidia" and "intel" then we can use graphic cards only on primary display. If we only specify "nvidia" then we can only use external display.
+  # CPU Power management.
+  # P-P-D conflicts with tlp.
+  services.power-profiles-daemon.enable = false;
+  services.tlp = {
+    enable = true;
+    settings = {
+      CPU_SCALING_GOVERNOR_ON_AC = "performance";
+      CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
+
+      CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
+      CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
+      CPU_BOOST_ON_AC = 1;
+      CPU_BOOST_ON_BAT = 0;
+
+      CPU_MIN_PERF_ON_AC = 0;
+      CPU_MAX_PERF_ON_AC = 100;
+      CPU_MIN_PERF_ON_BAT = 0;
+      CPU_MAX_PERF_ON_BAT = 20;
+    };
+  };
+  services.thermald.enable = true;
+
   # Tell Xorg to use nvidia driver and intel driver. So both external and laptop screens work.
   #services.xserver.videoDrivers = [ "nvidia" "intel"];
-  #services.xserver.videoDrivers = [  "intel"];
-  services.xserver.videoDrivers = [ "nvidia" ];
+  services.xserver.videoDrivers = [  "intel" ];
+  #services.xserver.videoDrivers = [ "nvidia" ];
 
-  hardware.nvidia = {
-
-    # Modesetting is needed for most wayland compositors
-    modesetting.enable = true;
-
-    # Use the open source version of the kernel module
-    # Only available on driver 515.43.04+
-    open = true;
-
-    # Enable the nvidia settings menu
-    nvidiaSettings = true;
-
-    # Optionally, you may need to select the appropriate driver version for your specific GPU.
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
+  # Add a specialisation for booting with gpu.
+  specialisation = {
+    nvidia.configuration = {
+      services.xserver.videoDrivers = [ "nvidia" ];
+      hardware.opengl.enable = true;
+      hardware.nvidia = {
+        nvidiaSettings = true;
+        package = config.boot.kernelPackages.nvidiaPackages.stable;
+        modesetting.enable = true;
+        open = true;
+        prime = {
+          sync.enable = true;
+          # Can be found by lspci.
+          nvidiaBusId = "PCI:1:0:0";
+          intelBusId = "PCI:0:2:0";
+        };
+      };
+    };
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
@@ -163,13 +196,19 @@ in {
     automake
     bashmount
     breeze-icons
+    brightnessctl
     #chezmoi
-    chromium
+    ccls
     clang
+    clang-tools
+    chromium
+    cscope
+    ctags
     direnv
     discord
     dolphin
     fd
+    feh
     firefox
     gfortran
     git
@@ -183,11 +222,14 @@ in {
     libxslt
     libreoffice-qt
     #lshw
+    gnome.nautilus
+    nodejs
     neovim
     oxygenfonts
     pandoc
     python3
     qutebrowser
+    ranger
     readline
     ripgrep
     rofi
@@ -197,6 +239,7 @@ in {
     stow
     unzip
     texlive.combined.scheme-full
+    tmux
     toolbox
     wget
     xclip
