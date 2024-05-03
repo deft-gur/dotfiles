@@ -51,13 +51,14 @@ exec --no-startup-id nm-applet
 #exec albert &
 # set wall paper, exec_always whenever the wallpaper.jpg is changed we
 # change the background
-exec_always feh --bg-scale $HOME/Pictures/wal/wallpaper.jpg
+exec_always feh --bg-scale $HOME/.config/i3/wallpaper.jpg
 
 # use compton for terminal transparency
 #exec --no-startup-id compton
 
 # use picom instead of compton for transparency of all window
 #exec --no-startup-id picom -I 1 -O 1
+#exec --no-startup-id picom
 
 # use polyBar
 #exec_always --no-startup-id $HOME/.config/polybar/launch.sh --cuts
@@ -90,7 +91,7 @@ bindsym $mod+Shift+q kill
 #bindsym $mod+d exec dmenu_run
 # Use rofi instead: drun uses application name. run shows all runnable binary
 # with the binary name.
-bindsym $mod+d exec rofi -show drun -show-icons
+bindsym $mod+d exec rofi -modi 'drun#filebrowser#run#ssh' -show-icons -show drun
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
@@ -229,14 +230,6 @@ bindsym $mod+r mode "resize"
 # keybind for shutter i.e. screenshot for area select
 bindsym $mod+Control+a exec shutter -s
 
-# Start i3bar to display a workspace bar (plus the system information i3status
-# finds out, if available)
-bar {
-        status_command i3status
-        height 25
-        position top
-}
-
 # documentation here: https://github.com/Airblader/i3
 # disable window tilebar
 # NOTE: gaps will only work if window tile bar is disabled
@@ -256,3 +249,51 @@ bindsym $mod+g exec ~/.config/i3/text-scratchpad.sh
 
 bindsym $mod+i exec rld-keynav
 
+# theme
+# set primary gruvbox colorscheme colors
+set $bg #282828
+set $red #cc241d
+set $green #98971a
+set $yellow #d79921
+set $blue #458588
+set $purple #b16286
+set $aqua #689d68
+set $gray #a89984
+set $darkgray #1d2021
+
+#start of bar section
+bar {
+    position top
+    #status_command i3blocks -c ~/.config/i3/i3blocks.conf
+    status_command i3status
+    colors {
+        # bar background color
+        background $bg
+        # text color used for blocks that do not have a color specified.
+        statusline $yellow
+        # workspaces section            
+        #                    border  backgr. text
+        focused_workspace    $aqua $aqua $darkgray
+        inactive_workspace   $darkgray $darkgray $yellow
+        active_workspace     $darkgray $darkgray $yellow
+        urgent_workspace     $red $red $bg
+    }
+}
+#end of bar section
+
+#start of window title bars & borders section
+# green gruvbox
+# class                 border|backgr|text|indicator|child_border
+client.focused          $green $green $darkgray $purple $darkgray
+client.focused_inactive $darkgray $darkgray $yellow $purple $darkgray
+client.unfocused        $darkgray $darkgray $yellow $purple $darkgray
+client.urgent           $red $red $white $red $red
+
+# blue gruvbox
+# class                 border|backgr|text|indicator|child_border
+#client.focused          $blue $blue $darkgray $purple $darkgray
+#client.focused_inactive $darkgray $darkgray $yellow $purple $darkgray
+#client.unfocused        $darkgray $darkgray $yellow $purple $darkgray
+#client.urgent           $red $red $white $red $red
+
+#end of window title bars & borders section
