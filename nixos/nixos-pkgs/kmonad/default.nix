@@ -30,8 +30,4 @@ in
   users.extraUsers.${username} = {
     extraGroups = [ "input" "uinput" ];
   };
-  users.extraUsers.ziwen = {
-    extraGroups = [ "input" "uinput" ];
-  };
-
 }

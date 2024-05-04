@@ -5,9 +5,6 @@
 { config, pkgs, username, ... }:
 
 let
-  compiledLayout = pkgs.runCommand "keyboard-layout" {} ''
-    ${pkgs.xorg.xkbcomp}/bin/xkbcomp ${../xkbcomp/layout.xkb} $out
-  '';
 in {
   nix.settings.trusted-users = [ "root" "${username}" ];
 
@@ -102,8 +99,6 @@ in {
         start = ''exec env KDEWM=${pkgs.i3-gaps}/bin/i3 ${pkgs.plasma-workspace}/bin/startplasma-x11'';
         }
       ];
-      # Use xkbcomp to swap esc and caps lock.
-      sessionCommands = "${pkgs.xorg.xkbcomp}/bin/xkbcomp ${compiledLayout} $DISPLAY";
     };
 
   };
@@ -250,7 +245,6 @@ in {
     xorg.xf86inputevdev
     xorg.xf86inputsynaptics
     xorg.xf86videointel
-    xorg.xkbcomp
     xorg.xorgserver
     xournalpp
     zathura
