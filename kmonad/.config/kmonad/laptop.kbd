@@ -19,7 +19,7 @@
 	spc (tap-next-release spc (layer-toggle num))
 	;;esc (tap-next-release esc (layer-toggle vi))
 	;;alt (multi-tap 200 ralt @esc)
-  alt (layer-add vi)
+  vi (layer-add vi)
   cesc (tap-next-release esc lctl)
 )
 
@@ -50,7 +50,7 @@
 	tab  q    w    e    r    t    y    u    i    o    p    [    ]    \    
 	@cesc a    s    d    f    g    h    j    k    l    ;    '    ret      
 	lsft z    x    c    v    b    n    m    ,    .    /    rsft  up
-	lctl @alt  lalt           @spc           @alt ralt rctl lft   down rght
+	lctl @vi  lalt           @spc           @vi ralt rctl lft   down rght
 )
 
 (deflayer vi
