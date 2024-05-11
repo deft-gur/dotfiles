@@ -20,10 +20,12 @@ set $mod Mod1
 #font pango:monospace 14
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
-font pango:DejaVu Sans Mono 18
+font pango:DejaVu Sans Mono 16
 
 # fix monitor issue with nvidia-config
-exec --no-startup-id xrandr --auto
+#exec --no-startup-id xrandr --auto
+exec_always --no-startup-id $HOME/.config/i3/dualMonitor.sh
+
 # Never go to sleep after idle
 exec --no-startup-id xset s off
 exec --no-startup-id xset -dpms 
@@ -64,9 +66,6 @@ exec_always feh --bg-scale $HOME/.config/i3/wallpaper.jpg
 
 # use polyBar
 #exec_always --no-startup-id $HOME/.config/polybar/launch.sh --cuts
-
-# use dual monitor for arch
-#exec_always --no-startup-id $HOME/.config/i3/dualMonitor.sh
 
 # use fcitx for typing chinese
 exec_always fcitx5 -d

@@ -18,7 +18,7 @@ in
   # You should not change this value, even if you update Home Manager. If you do
   # want to update the value, then make sure to first check the Home Manager
   # release notes.
-  home.stateVersion = "22.11"; # Please read the comment before changing.
+  home.stateVersion = "23.11"; # Please read the comment before changing.
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
@@ -72,6 +72,34 @@ in
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
+
+  # Zsh:
+  programs.zsh = {
+    enable = true;
+    enableCompletion = true;
+    syntaxHighlighting.enable = true;
+
+    shellAliases = {
+      ll = "ls -l";
+    };
+    envExtra = ''
+      POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
+    '';
+    history.size = 10000;
+    history.path = "${config.xdg.dataHome}/zsh/history";
+    zplug = {
+      enable = true;
+      plugins = [
+        { name = "zsh-users/zsh-autosuggestions"; }
+        { name = "zsh-users/git"; }
+        { name = "zsh-users/vi-mode"; }
+        { name = "zsh-users/zsh-completions"; }
+        { name = "zsh-users/zsh-history-substring-search"; }
+        { name = "zsh-users/zsh-syntax-highlighting"; }
+        { name = "romkatv/powerlevel10k"; tags = [ as:theme depth:1 ]; }
+      ];
+    };
+  };
 
   # Theme:
   #qt.enable = true;

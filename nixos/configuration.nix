@@ -15,9 +15,10 @@ in {
     ];
 
   # Bootloader.
+  boot.kernelPackages = pkgs.linuxPackages_6_6;
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.efi.efiSysMountPoint = "/boot/efi";
+  #boot.loader.efi.efiSysMountPoint = "/boot/efi";
 
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -41,16 +42,9 @@ in {
     fcitx5.addons = with pkgs; [ fcitx5-rime fcitx5-chinese-addons ];
   };
 
-  # Change behaviour of Lid close.
-  # For MSI GS65 after suspending it will go into air plane mode which blocks
-  # the wireless wlan at hardware level.
-  # So either we don't goto suspend mode or we disable airplane mode. But
-  # airplane mode doesn't have any actions (There is a post that fixes this but
-  # it requires to change grub configuration file).
-  services.logind.lidSwitch = "ignore";
-
   # Enable bluetooth
   hardware.bluetooth.enable = true;
+  hardware.bluetooth.powerOnBoot = true;
   services.blueman.enable = true;
 
   # Enable volume
@@ -139,9 +133,7 @@ in {
   services.thermald.enable = true;
 
   # Tell Xorg to use nvidia driver and intel driver. So both external and laptop screens work.
-  #services.xserver.videoDrivers = [ "nvidia" "intel"];
-  services.xserver.videoDrivers = [  "intel" ];
-  #services.xserver.videoDrivers = [ "nvidia" ];
+  services.xserver.videoDrivers = [  "amdgpu" ];
 
   # Add a specialisation for booting with gpu.
   specialisation = {
@@ -150,18 +142,25 @@ in {
       hardware.opengl.enable = true;
       hardware.nvidia = {
         nvidiaSettings = true;
-        package = config.boot.kernelPackages.nvidiaPackages.stable;
+        package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
         modesetting.enable = true;
         open = true;
         prime = {
           sync.enable = true;
           # Can be found by lspci.
           nvidiaBusId = "PCI:1:0:0";
-          intelBusId = "PCI:0:2:0";
+          amdgpuBusId = "PCI:65:0:0";
         };
       };
     };
   };
+
+  services.asusd = {
+    enable = true;
+    enableUserService = true;
+  };
+  programs.rog-control-center.enable = true;  
+
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.${username} = {
@@ -190,6 +189,7 @@ in {
     R
     abiword
     alacritty
+    asusctl
     autoconf
     automake
     bashmount
@@ -211,6 +211,7 @@ in {
     git
     gnome.nautilus
     gnumake
+    home-manager
     hunspell
     imagemagick
     jdk8
@@ -223,6 +224,7 @@ in {
     nodejs
     oxygenfonts
     pandoc
+    powertop
     python3
     qutebrowser
     ranger
@@ -244,7 +246,7 @@ in {
     xorg.libX11.dev
     xorg.xf86inputevdev
     xorg.xf86inputsynaptics
-    xorg.xf86videointel
+    xorg.xf86videoamdgpu
     xorg.xorgserver
     xournalpp
     zathura
@@ -253,7 +255,7 @@ in {
     zsh
   ];
 
-  fonts.fonts = with pkgs; [
+  fonts.packages = with pkgs; [
     dina-font
     fira-code
     fira-code-symbols
@@ -306,7 +308,7 @@ in {
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "22.11"; # Did you read the comment?
+  system.stateVersion = "23.11"; # Did you read the comment?
 
   # Enable flake.
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
