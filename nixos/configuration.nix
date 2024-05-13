@@ -15,10 +15,13 @@ in {
     ];
 
   # Bootloader.
-  boot.kernelPackages = pkgs.linuxPackages_6_6;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   #boot.loader.efi.efiSysMountPoint = "/boot/efi";
+
+  # Enable all firmware.
+  hardware.enableAllFirmware = true;
 
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -43,9 +46,11 @@ in {
   };
 
   # Enable bluetooth
-  hardware.bluetooth.enable = true;
-  hardware.bluetooth.powerOnBoot = true;
-  services.blueman.enable = true;
+  # Enabling bluetooth will decrease the wifi connection by almost half!
+  # TODO: Replace the media tech wifi card with intel ax210 later.
+  #hardware.bluetooth.enable = true;
+  #hardware.bluetooth.powerOnBoot = true;
+  #services.blueman.enable = true;
 
   # Enable volume
   hardware.pulseaudio = {
@@ -97,8 +102,6 @@ in {
 
   };
 
-
-
   # Make sure opengl is enabled
   hardware.opengl = {
     enable = true;
@@ -110,57 +113,83 @@ in {
   # enable touchpad
   services.xserver.libinput.enable = true;
 
-  # CPU Power management.
-  # P-P-D conflicts with tlp.
-  services.power-profiles-daemon.enable = false;
-  services.tlp = {
-    enable = true;
-    settings = {
-      CPU_SCALING_GOVERNOR_ON_AC = "performance";
-      CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
-
-      CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
-      CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
-      CPU_BOOST_ON_AC = 1;
-      CPU_BOOST_ON_BAT = 0;
-
-      CPU_MIN_PERF_ON_AC = 0;
-      CPU_MAX_PERF_ON_AC = 100;
-      CPU_MIN_PERF_ON_BAT = 0;
-      CPU_MAX_PERF_ON_BAT = 20;
-    };
-  };
-  services.thermald.enable = true;
-
   # Tell Xorg to use nvidia driver and intel driver. So both external and laptop screens work.
   services.xserver.videoDrivers = [  "amdgpu" ];
 
   # Add a specialisation for booting with gpu.
   specialisation = {
-    nvidia.configuration = {
-      services.xserver.videoDrivers = [ "nvidia" ];
-      hardware.opengl.enable = true;
-      hardware.nvidia = {
-        nvidiaSettings = true;
-        package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
-        modesetting.enable = true;
-        open = true;
-        prime = {
-          sync.enable = true;
-          # Can be found by lspci.
-          nvidiaBusId = "PCI:1:0:0";
-          amdgpuBusId = "PCI:65:0:0";
+    # Nvidia card broken with latest kernel. Disable it for now.
+    #nvidia.configuration = {
+    #  services.xserver.videoDrivers = [ "nvidia" ];
+    #  hardware.opengl.enable = true;
+    #  hardware.nvidia = {
+    #    nvidiaSettings = true;
+    #    # This is borken!
+    #    package = config.boot.kernelPackages.nvidiaPackages.stable;
+    #    modesetting.enable = true;
+    #    open = true;
+    #    prime = {
+    #      sync.enable = true;
+    #      # Can be found by lspci.
+    #      nvidiaBusId = "PCI:1:0:0";
+    #      amdgpuBusId = "PCI:65:0:0";
+    #    };
+    #  };
+    #  services.supergfxd.enable = true;
+    #  systemd.services.supergfxd.path = [ pkgs.pciutils ];
+    #  services.asusd = {
+    #    enable = true;
+    #    enableUserService = true;
+    #  };
+    #  programs.rog-control-center.enable = true;
+    #};
+    powerSave.configuration = {
+      # CPU Power management.
+      powerManagement = {
+        enable = true;
+        powertop.enable = true;
+        cpuFreqGovernor = "powersave";
+      };
+      # P-P-D conflicts with tlp.
+      services.power-profiles-daemon.enable = false;
+      services.tlp = {
+        enable = true;
+        settings = {
+          CPU_SCALING_GOVERNOR_ON_AC = "performance";
+          CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
+
+          CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
+          CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
+          CPU_BOOST_ON_AC = 1;
+          CPU_BOOST_ON_BAT = 0;
+
+          CPU_MIN_PERF_ON_AC = 0;
+          CPU_MAX_PERF_ON_AC = 100;
+          CPU_MIN_PERF_ON_BAT = 0;
+          CPU_MAX_PERF_ON_BAT = 20;
         };
+      };
+      services.thermald.enable = true;
+      services.udev.extraRules = ''
+          # Remove NVIDIA USB xHCI Host Controller devices, if present
+          ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x0c0330", ATTR{power/control}="auto", ATTR{remove}="1"
+          # Remove NVIDIA USB Type-C UCSI devices, if present
+          ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x0c8000", ATTR{power/control}="auto", ATTR{remove}="1"
+          # Remove NVIDIA Audio devices, if present
+          ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x040300", ATTR{power/control}="auto", ATTR{remove}="1"
+          # Remove NVIDIA VGA/3D controller devices
+          ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x03[0-9]*", ATTR{power/control}="auto", ATTR{remove}="1"
+        '';
+      boot = {
+        extraModprobeConfig = ''
+          blacklist nouveau
+          options nouveau modeset=0
+        '';
+        blacklistedKernelModules =
+          [ "nouveau" "nvidia" "nvidia_drm" "nvidia_modeset" ];
       };
     };
   };
-
-  services.asusd = {
-    enable = true;
-    enableUserService = true;
-  };
-  programs.rog-control-center.enable = true;  
-
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.${username} = {
@@ -224,6 +253,7 @@ in {
     nodejs
     oxygenfonts
     pandoc
+    pciutils
     powertop
     python3
     qutebrowser

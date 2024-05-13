@@ -82,6 +82,11 @@ in
     shellAliases = {
       ll = "ls -l";
     };
+
+    initExtraFirst = ''
+      [[ ! -f ${./p10k.zsh} ]] || source ${./p10k.zsh}
+    '';
+
     envExtra = ''
       POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
     '';
@@ -91,8 +96,7 @@ in
       enable = true;
       plugins = [
         { name = "zsh-users/zsh-autosuggestions"; }
-        { name = "zsh-users/git"; }
-        { name = "zsh-users/vi-mode"; }
+        { name = "jeffreytse/zsh-vi-mode"; }
         { name = "zsh-users/zsh-completions"; }
         { name = "zsh-users/zsh-history-substring-search"; }
         { name = "zsh-users/zsh-syntax-highlighting"; }
