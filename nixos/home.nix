@@ -89,6 +89,7 @@ in
 
     envExtra = ''
       POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
+      [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
     '';
     history.size = 10000;
     history.path = "${config.xdg.dataHome}/zsh/history";
