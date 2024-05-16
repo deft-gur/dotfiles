@@ -15,13 +15,16 @@ in {
     ];
 
   # Bootloader.
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages_6_9;
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   #boot.loader.efi.efiSysMountPoint = "/boot/efi";
 
   # Enable all firmware.
   hardware.enableAllFirmware = true;
+  hardware.firmware = [
+    pkgs.firmwareLinuxNonfree
+  ];
 
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -231,7 +234,7 @@ in {
     cscope
     ctags
     direnv
-    discord
+    (discord.override { withVencord = true; })
     dolphin
     fd
     feh
@@ -269,6 +272,7 @@ in {
     tmux
     toolbox
     unzip
+    vesktop
     wget
     xclip
     xf86_input_wacom
@@ -312,6 +316,12 @@ in {
     defaultEditor = true;
     enable = true;
   };
+
+  # Add swap files
+  swapDevices = [ {
+    device = "/var/lib/swapfile";
+    size = 32*1024;
+  } ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
