@@ -1,12 +1,13 @@
 {
 	"name": "Vimium C",
-	"@time": "23/12/2021, 20:51:11",
-	"time": 1640314271558,
+	"@time": "5/18/2024, 9:24:35 PM",
+	"time": 1716081875150,
 	"environment": {
-		"extension": "1.94.0",
+		"extension": "1.99.994",
 		"platform": "linux",
-		"chrome": 80
+		"chromium": 124
 	},
+	"allBrowserUrls": true,
 	"keyMappings": [
 		"#!no-check",
 		"# Insert your preferred key mappings here.",
@@ -14,7 +15,12 @@
 		" map L scrollRight                                                              ",
 		" map h goBack                                                                  ",
 		" map l goForward",
+		" unmap J",
+		" unmap K",
+		" map J nextTab",
+		" map K previousTab",
 		" map s LinkHints.activate dblclick",
 		""
-	]
+	],
+	"vimSync": true
 }
