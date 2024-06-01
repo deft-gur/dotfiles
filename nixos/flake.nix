@@ -8,9 +8,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    nixpkgs-howdy.url = "github:fufexan/nixpkgs/howdy";
   };
 
-  outputs = { self, nixpkgs, home-manager, nixos-hardware, ... }@attrs:
+  outputs = { self, nixpkgs, home-manager, nixos-hardware, nixpkgs-howdy, ... }@attrs:
     let
       lib = nixpkgs.lib;
       system = "x86_64-linux";

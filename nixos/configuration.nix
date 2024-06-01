@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, username, ... }:
+{ config, pkgs, username, nixpkgs-howdy, ... }:
 
 let
 in {
@@ -12,7 +12,16 @@ in {
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./nixos-pkgs/kmonad/default.nix
+      #"${nixpkgs-howdy}/nixos/modules/services/security/howdy/default.nix"
     ];
+
+  #disabledModules = ["security/pam.nix"];
+  #services = {
+  #  howdy = {
+  #    enalbe = true;
+  #    device = "/dev/video1";
+  #  };
+  #};
 
   # Bootloader.
   boot.kernelPackages = pkgs.linuxPackages_6_9;
@@ -46,6 +55,22 @@ in {
   i18n.inputMethod = {
     enabled = "fcitx5";
     fcitx5.addons = with pkgs; [ fcitx5-rime fcitx5-chinese-addons ];
+  };
+
+  # Setup redshift for eye protection.
+  services.redshift = {
+    enable = true;
+    latitude = "43.45747";
+    longitude = "-80.38593";
+    brightness = {
+      # Note the string values below.
+      day = "1";
+      night = "1";
+    };
+    temperature = {
+      day = 5500;
+      night = 3700;
+    };
   };
 
   # Enable bluetooth
@@ -89,6 +114,7 @@ in {
     };
 
     displayManager = {
+      startx.enable = true;
       defaultSession = "none+i3";
       # Use gdm instead of lightdm
       gdm.enable = true;
@@ -122,6 +148,7 @@ in {
   # Add a specialisation for booting with gpu.
   specialisation = {
     # Nvidia card broken with latest kernel. Disable it for now.
+    # TODO: Fix this later.
     #nvidia.configuration = {
     #  services.xserver.videoDrivers = [ "nvidia" ];
     #  hardware.opengl.enable = true;
@@ -258,7 +285,6 @@ in {
     pandoc
     pciutils
     powertop
-    python3
     qutebrowser
     ranger
     readline
@@ -272,7 +298,6 @@ in {
     tmux
     toolbox
     unzip
-    vesktop
     wget
     xclip
     xf86_input_wacom
@@ -304,6 +329,11 @@ in {
     noto-fonts-extra
     proggyfonts
   ];
+
+  # Sway.
+  #programs.sway = {
+  #  enable = true;
+  #};
 
   # zshell settings.
   programs.zsh = {

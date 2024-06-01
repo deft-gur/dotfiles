@@ -39,6 +39,13 @@ in
     # (pkgs.writeShellScriptBin "my-hello" ''
     #   echo "Hello, ${config.home.username}!"
     # '')
+    pkgs.mpv
+    pkgs.nixd
+    pkgs.vesktop
+    pkgs.you-get
+    pkgs.yt-dlp
+    pkgs.openvpn
+    (import ./python-packages.nix { inherit pkgs; })
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
