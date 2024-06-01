@@ -26,14 +26,14 @@ order += "cpu_usage"
 order += "memory"
 #order += "memory ava"
 order += "disk /"
-order += "disk /home/"
+#order += "disk /home/"
 #order += "disk /media/media"
 #order += "ethernet eth0"
 order += "tztime local"
 #order += "ipv6"
 order += "run_watch DHCP"
-#order += "run_watch VPN"
-order += "wireless wlo1"
+order += "run_watch VPN"
+order += "wireless wlp3s0"
 order += "battery all"
 
 volume master {
@@ -91,9 +91,9 @@ disk "/media/media" {
 	format = " ¨ %avail:m "
 }
 
-wireless wlo1 {
-	#format_up = " W: (%quality at %essid) %ip "
-  format_up = " W: (%quality at %essid)"
+wireless wlp3s0 {
+	format_up = " W: (%quality at %essid) %ip "
+  #format_up = " W: (%quality at %essid)"
 	format_down = " ☡ WiFi "
 }
 
@@ -116,7 +116,7 @@ run_watch VPN {
 }
 
 tztime local {
-#	format = " %h-%d %H:%M ☰ "
+  #	format = " %h-%d %H:%M ☰ "
 	# termsyn font
 	format = " %h-%d %H:%M "
 }
