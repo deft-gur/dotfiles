@@ -228,8 +228,11 @@ c.url.default_page = 'https://www.google.com/'
 # Type: Dict
 c.url.searchengines = {
         'DEFAULT': 'https://google.com/search?hl=en&q={}',
-        '!yt': 'https://www.youtube.com/results?search_query={}',
-        '!bl': 'https://search.bilibili.com/all?keyword={}'
+        '!yt':     'https://www.youtube.com/results?search_query={}',
+        '!bl':     'https://search.bilibili.com/all?keyword={}',
+        '!pkgs':   'https://search.nixos.org/packages?&query={}',
+        '!nixos':  'https://mynixos.com/search?q={}',
+        '!ym':      'https://music.youtube.com/search?q={}'
 }
 
 # Page(s) to open at the start.
@@ -262,6 +265,9 @@ config.bind(',<Escape>', ':fake-key <Escape>')
 # document.activeElment.blur() is just a js function that
 #  unselects the current active html element
 config.bind('<ctrl-[>', ':jseval -q document.activeElement.blur()')
+
+config.bind('>', ':tab-move +')
+config.bind('<', ':tab-move -')
 
 config.set('zoom.default', 125)
 
@@ -323,3 +329,6 @@ c.hints.selectors={
 # config.set("fileselect.handler", "external")
 # config.set("fileselect.single_file.command", ['alacritty', '--class', 'ranger.ranger', '-e', 'ranger', '--choosefile', '{}'])
 # config.set("fileselect.multiple_files.command", ['alacritty', '--class', 'ranger.ranger', '-e', 'ranger', '--choosefiles', '{}'])
+config.source('gruvbox.py')
+#c.spellcheck.languages = ['en-US']
+config.bind(',c', 'spawn -d chromium {url}')
