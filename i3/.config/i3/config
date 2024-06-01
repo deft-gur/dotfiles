@@ -199,7 +199,8 @@ bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+#bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+bindsym $mod+Shift+e exec "i3-msg exit"
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -236,8 +237,8 @@ bindsym $mod+Control+a exec shutter -s
 # NOTE: gaps will only work if window tile bar is disabled
 for_window [class="^.*"] border pixel 0
 # set gaps
-gaps inner 20
-gaps outer -8
+gaps inner 15
+gaps outer 0
 #gaps inner all set 20
 #gaps outer current plus 5
 #gaps horizontal current plus 40
@@ -264,6 +265,9 @@ set $darkgray #1d2021
 
 #start of bar section
 bar {
+    mode hide
+    hidden_state hide
+    modifier $mod
     position top
     #status_command i3blocks -c ~/.config/i3/i3blocks.conf
     status_command i3status
