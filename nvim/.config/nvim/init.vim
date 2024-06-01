@@ -27,7 +27,8 @@ Plug 'junegunn/vim-easy-align'
 Plug 'https://github.com/junegunn/vim-github-dashboard.git'
 
 " Multiple Plug commands can be written in a single line using | separators
-"Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+Plug 'SirVer/ultisnips'
+"Plug 'honza/vim-snippets'
 
 " On-demand loading
 " File navigation
@@ -143,6 +144,7 @@ Plug 'dylanaraps/wal.vim'
 
 " using latex
 Plug 'lervag/vimtex'
+Plug   'KeitaNakamura/tex-conceal.vim', {'for': 'tex'}
 
 " plugin for r like rstudio
 Plug 'jalvesaq/Nvim-R', {'branch': 'stable'}
@@ -357,6 +359,7 @@ let g:python_highlight_all = 1
 noremap <F5> :UndotreeToggle<CR>
 
 set spell
+set spelllang=en_us
 
 " You Complete ME
 "nnoremap gd :YcmCompleter GoToDefinitionElseDeclaration<CR>
@@ -626,8 +629,20 @@ execute "digraphs WS " . 0x1D42
 "    augroup END
 "endfunction
 
-" source init.lua file
+" source init.lua file.
 lua require('init')
 
-" Set vimtex to use zathura
+" Set vimtex to use zathura.
 let g:vimtex_view_method = 'zathura'
+let g:vimtex_version_check = 0
+set conceallevel=1
+let g:tex_conceal='abdmg'
+
+" Snippet.
+let g:UltiSnipsJumpForwardTrigger="<c-j>"
+let g:UltiSnipsJumpBackwardTrigger="<c-k>"
+
+" Set python path.
+let g:python3_host_prog="~/.nix-profile/bin/python3"
+" Set spelling check.
+inoremap <C-l> <c-g>u<Esc>[s1z=`]a<c-g>u
