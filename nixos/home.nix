@@ -39,12 +39,15 @@ in
     # (pkgs.writeShellScriptBin "my-hello" ''
     #   echo "Hello, ${config.home.username}!"
     # '')
+    pkgs.direnv
     pkgs.mpv
     pkgs.nixd
+    pkgs.obs-studio
+    pkgs.openvpn
+    pkgs.typst
     pkgs.vesktop
     pkgs.you-get
     pkgs.yt-dlp
-    pkgs.openvpn
     (import ./python-packages.nix { inherit pkgs; })
   ];
 
@@ -80,6 +83,16 @@ in
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
+  xdg.mimeApps = {
+    enable = true;
+    associations.added = {
+      "application/pdf" = ["org.pwmt.zathura-pdf-mupdf.desktop"];
+    };
+    defaultApplications = {
+      "application/pdf" = ["org.pwmt.zathura-pdf-mupdf.desktop"];
+    };
+  };
+
   # Zsh:
   programs.zsh = {
     enable = true;
@@ -92,6 +105,7 @@ in
 
     initExtraFirst = ''
       [[ ! -f ${./p10k.zsh} ]] || source ${./p10k.zsh}
+      eval "$(direnv hook zsh)"
     '';
 
     envExtra = ''

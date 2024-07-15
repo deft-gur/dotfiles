@@ -58,10 +58,10 @@ in {
   };
 
   # Setup redshift for eye protection.
+  location.latitude = 43.45747;
+  location.longitude = -80.38593;
   services.redshift = {
     enable = true;
-    latitude = "43.45747";
-    longitude = "-80.38593";
     brightness = {
       # Note the string values below.
       day = "1";
@@ -73,12 +73,18 @@ in {
     };
   };
 
+  # Enable mySQL
+  services.mysql = {
+    enable = true;
+    package = pkgs.mysql;
+  };
+
   # Enable bluetooth
   # Enabling bluetooth will decrease the wifi connection by almost half!
   # TODO: Replace the media tech wifi card with intel ax210 later.
-  #hardware.bluetooth.enable = true;
-  #hardware.bluetooth.powerOnBoot = true;
-  #services.blueman.enable = true;
+  hardware.bluetooth.enable = true;
+  hardware.bluetooth.powerOnBoot = true;
+  services.blueman.enable = true;
 
   # Enable volume
   hardware.pulseaudio = {
@@ -134,7 +140,7 @@ in {
   # Make sure opengl is enabled
   hardware.opengl = {
     enable = true;
-    driSupport = true;
+    #driSupport = true;
     driSupport32Bit = true;
     extraPackages = [ pkgs.mesa.drivers ];
   };
@@ -145,34 +151,54 @@ in {
   # Tell Xorg to use nvidia driver and intel driver. So both external and laptop screens work.
   services.xserver.videoDrivers = [  "amdgpu" ];
 
+  services.asusd = {
+    enable = true;
+    enableUserService = true;
+  };
+
   # Add a specialisation for booting with gpu.
   specialisation = {
-    # Nvidia card broken with latest kernel. Disable it for now.
-    # TODO: Fix this later.
-    #nvidia.configuration = {
-    #  services.xserver.videoDrivers = [ "nvidia" ];
-    #  hardware.opengl.enable = true;
-    #  hardware.nvidia = {
-    #    nvidiaSettings = true;
-    #    # This is borken!
-    #    package = config.boot.kernelPackages.nvidiaPackages.stable;
-    #    modesetting.enable = true;
-    #    open = true;
-    #    prime = {
-    #      sync.enable = true;
-    #      # Can be found by lspci.
-    #      nvidiaBusId = "PCI:1:0:0";
-    #      amdgpuBusId = "PCI:65:0:0";
-    #    };
-    #  };
-    #  services.supergfxd.enable = true;
-    #  systemd.services.supergfxd.path = [ pkgs.pciutils ];
-    #  services.asusd = {
-    #    enable = true;
-    #    enableUserService = true;
-    #  };
-    #  programs.rog-control-center.enable = true;
-    #};
+    nvidia.configuration = {
+      #nixpkgs.config.cudaSupport = true;
+      services.xserver.videoDrivers = [ "nvidia" ];
+      hardware.opengl.enable = true;
+      hardware.nvidia = {
+        nvidiaSettings = true;
+        modesetting.enable = true;
+        open = true;
+        prime = {
+          sync.enable = true;
+          # Can be found by lspci.
+          nvidiaBusId = "PCI:1:0:0";
+          amdgpuBusId = "PCI:65:0:0";
+        };
+        package =  let 
+          rcu_patch = pkgs.fetchpatch {
+            url = "https://github.com/gentoo/gentoo/raw/c64caf53/x11-drivers/nvidia-drivers/files/nvidia-drivers-470.223.02-gpl-pfn_valid.patch";
+            hash = "sha256-eZiQQp2S/asE7MfGvfe6dA/kdCvek9SYa/FFGp24dVg=";
+          };
+        in config.boot.kernelPackages.nvidiaPackages.mkDriver {
+            #version = "535.154.05";
+            #sha256_64bit = "sha256-fpUGXKprgt6SYRDxSCemGXLrEsIA6GOinp+0eGbqqJg=";
+            #sha256_aarch64 = "sha256-G0/GiObf/BZMkzzET8HQjdIcvCSqB1uhsinro2HLK9k=";
+            #openSha256 = "sha256-wvRdHguGLxS0mR06P5Qi++pDJBCF8pJ8hr4T8O6TJIo=";
+            #settingsSha256 = "sha256-9wqoDEWY4I7weWW05F4igj1Gj9wjHsREFMztfEmqm10=";
+            #persistencedSha256 = "sha256-d0Q3Lk80JqkS1B54Mahu2yY/WocOqFFbZVBh+ToGhaE=";
+
+            version = "550.40.07";
+            sha256_64bit = "sha256-KYk2xye37v7ZW7h+uNJM/u8fNf7KyGTZjiaU03dJpK0=";
+            sha256_aarch64 = "sha256-AV7KgRXYaQGBFl7zuRcfnTGr8rS5n13nGUIe3mJTXb4=";
+            openSha256 = "sha256-mRUTEWVsbjq+psVe+kAT6MjyZuLkG2yRDxCMvDJRL1I=";
+            settingsSha256 = "sha256-c30AQa4g4a1EHmaEu1yc05oqY01y+IusbBuq+P6rMCs=";
+            persistencedSha256 = "sha256-11tLSY8uUIl4X/roNnxf5yS2PQvHvoNjnd2CB67e870=";
+            patches = [ rcu_patch ];
+         };
+
+      };
+      services.supergfxd.enable = true;
+      systemd.services.supergfxd.path = [ pkgs.pciutils ];
+      programs.rog-control-center.enable = true;
+    };
     powerSave.configuration = {
       # CPU Power management.
       powerManagement = {
@@ -226,6 +252,7 @@ in {
     isNormalUser = true;
     description = "Ziwen Wang";
     extraGroups = [ "networkmanager" "wheel" ];
+    openssh.authorizedKeys.keys = ["AAAAC3NzaC1lZDI1NTE5AAAAIBAZquHteIvhH8PlIKgWUgyaHWwMaVpQxAP1W3Ztzffm"];
     packages = with pkgs; [];
   };
 
@@ -245,6 +272,7 @@ in {
     #chezmoi
     #libgccjit
     #lshw
+    mysql
     R
     abiword
     alacritty
@@ -279,6 +307,7 @@ in {
     libxml2
     libxml2.dev
     libxslt
+    moonlight-qt
     neovim
     nodejs
     oxygenfonts
@@ -288,21 +317,26 @@ in {
     qutebrowser
     ranger
     readline
+    remmina
     ripgrep
     rofi
     rofimoji
     rstudio
     shutter
     stow
+    steam
+    sunshine
     texlive.combined.scheme-full
     tmux
     toolbox
     unzip
     wget
+    x2goclient
     xclip
     xf86_input_wacom
     xorg.libX11
     xorg.libX11.dev
+    xorg.xauth
     xorg.xf86inputevdev
     xorg.xf86inputsynaptics
     xorg.xf86videoamdgpu
@@ -356,21 +390,56 @@ in {
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
+  programs.gnupg.agent = {
+    enable = true;
+    enableSSHSupport = true;
+  };
 
-  # List services that you want to enable:
+  # Sunshine config.
+  security.wrappers.sunshine = {
+    owner = "root";
+    group = "root";
+    capabilities = "cap_sys_admin+p";
+    source = "${pkgs.sunshine}/bin/sunshine";
+  };
+  services.udev.packages = [ pkgs.sunshine  ]; # allow access to create virtual input interfaces.
+
+  services.xrdp = {
+    enable = true;
+    openFirewall = true;
+    #defaultWindowManager = "startplasma-x11";
+    defaultWindowManager = "${pkgs.i3-gaps}/bin/i3";
+    #extraConfDirCommands = ''
+    #  substituteInPlace $out/xrdp.ini \
+    #    --replace port=-1 port=ask-1 \
+    #'';
+  };
+
+  # Needed for network discovery
+  services.avahi.enable = true;
+  services.avahi.publish.enable = true;
+  services.avahi.publish.userServices = true;
 
   # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
+  services.openssh = {
+    enable = true;
+    settings = {
+      #PasswordAuthentication = false;
+      X11Forwarding = true;
+      PermitRootLogin = "no";
+    };
+  };
 
   # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [ 22 3389 47984 47989 47990 48010 ];
+    allowedUDPPortRanges = [
+      { from = 47998; to = 48000; }
+      { from = 8000; to = 8010; }
+    ];
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
