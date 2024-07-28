@@ -12,14 +12,18 @@ def env(name):
 endglobal
 
 snippet template "Basic template" b
-\documentclass[a4paper]{article}
+\documentclass[a4paper,12pt]{article}
 
+\usepackage[margin=1in]{geometry}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{textcomp}
-\usepackage[dutch]{babel}
-\usepackage{amsmath, amssymb}
-
+\usepackage{babel}
+\usepackage{amsthm, amssymb, amsmath, amsfonts, url, enumerate, graphics}
+\newcounter{prn}
+\setcounter{prn}{1}
+\newcommand{\apr}{\noindent\textsc{Problem} \textsc{\theprn}\stepcounter{prn}}
+\newtheorem*{aprn}{Problem}
 
 % figure support
 \usepackage{import}
@@ -55,7 +59,7 @@ snippet fig "Figure environment" b
 endsnippet
 
 snippet enum "Enumerate" bA
-\begin{enumerate}
+\begin{enumerate}[$1]
   \item $0
 \end{enumerate}
 endsnippet
@@ -88,7 +92,7 @@ else:
 `$2
 endsnippet
 
-snippet dm "Math" wA
+snippet md "Math" wA
 \[
 $1
 .\] $0
@@ -100,7 +104,7 @@ endsnippet
 #endsnippet
 
 context "math()"
-snippet '([A-Za-z])_(\d\d)' "auto subscript2" wrA
+snippet '(.)_([\w\d]+)' "auto subscript2" wr
 `!p snip.rv = match.group(1)`_{`!p snip.rv = match.group(2)`}
 endsnippet
 
@@ -110,7 +114,7 @@ endsnippet
 #endsnippet
 
 context "math()"
-snippet '([A-Za-z])\^(\d\d)' "auto superscript2" wrA
+snippet '(.)^([\w\d]+)' "auto superscript2" wr
 `!p snip.rv = match.group(1)`^{`!p snip.rv = match.group(2)`}
 endsnippet
 
@@ -120,14 +124,17 @@ endsnippet
 #^{$1}$0
 #endsnippet
 
+context "math()"
 snippet // "Fraction" iA
 \\frac{$1}{$2}$0
 endsnippet
 
+context "math()"
 snippet '((\d+)|(\d*)(\\)?([A-Za-z]+)((\^|_)(\{\d+\}|\d))*)/' "Fraction" wrA
 \\frac{`!p snip.rv = match.group(1)`}{$1}$0
 endsnippet
 
+context "math()"
 snippet / "Fraction" i
 \\frac{${VISUAL}}{$1}$0
 endsnippet
@@ -189,7 +196,7 @@ snippet "([a-zA-Z])hat" "hat" riA
 endsnippet
 
 snippet "(\\?\w+)(,\.|\.,)" "Vector postfix" riA
-\vec{`!p snip.rv=match.group(1)`}
+\bold{`!p snip.rv=match.group(1)`}
 endsnippet 
 
 context "math()"
@@ -199,11 +206,34 @@ endsnippet
 
 context "math()"
 snippet sum "sum" wA
-\sum{$1}$0
+\sum_{$1}$0
 endsnippet
 
 context "math()"
-snippet prod "sum" wA
-\prod{$1}$0
+snippet pd "sum" wA
+\prod_{$1}$0
 endsnippet
 
+context "math()"
+snippet ss "subset" wA
+\subset $0
+endsnippet
+
+context "math()"
+snippet sq "subset equal" wA
+\subseteq $0
+endsnippet
+
+context "math()"
+snippet text "text" wA
+\text{ $1 } $0
+endsnippet
+
+context "math()"
+snippet <= "less equal" wA
+\leq $0
+endsnippet
+context "math()"
+snippet >= "greater equal" wA
+\geq $0
+endsnippet

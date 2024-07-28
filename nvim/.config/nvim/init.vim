@@ -146,6 +146,9 @@ Plug 'dylanaraps/wal.vim'
 Plug 'lervag/vimtex'
 Plug   'KeitaNakamura/tex-conceal.vim', {'for': 'tex'}
 
+" Typset
+Plug 'kaarmu/typst.vim'
+
 " plugin for r like rstudio
 Plug 'jalvesaq/Nvim-R', {'branch': 'stable'}
 
@@ -645,4 +648,20 @@ let g:UltiSnipsJumpBackwardTrigger="<c-k>"
 " Set python path.
 let g:python3_host_prog="~/.nix-profile/bin/python3"
 " Set spelling check.
-inoremap <C-l> <c-g>u<Esc>[s1z=`]a<c-g>u
+inoremap <C-l> <C-g>u<Esc>[s1z=`]a<C-g>u
+" Select last misspelled word (typing will edit).
+nnoremap <C-K> <Esc>[sve<C-G>
+inoremap <C-K> <Esc>[sve<C-G>
+snoremap <C-K> <Esc>b[sviw<C-G>]]]
+
+
+let g:typst_pdf_viewer = 'zathura'
+let g:typst_conceal = 1
+let g:typst_conceal_math = 1
+let g:typst_conceal_emoji = 1
+let g:typst_auto_open_quickfix = 0
+
+" Autosave when opening .md .tex, .typst files
+autocmd TextChanged,TextChangedI *.md silent write
+autocmd TextChanged,TextChangedI *.tex silent write
+autocmd TextChanged,TextChangedI *.typ silent write
